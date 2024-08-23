@@ -165,17 +165,25 @@ def create_cloned_field(
 
 
 def generate_operation_id_for_path(
-    *, name: str, path: str, method: str
+    *, name: str, path: str, method: str, log: bool = False
 ) -> str:  # pragma: nocover
+    if log:
+        print(f"Generating operation ID for name: {name}, path: {path}, method: {method}")
+
     warnings.warn(
         "fastapi.utils.generate_operation_id_for_path() was deprecated, "
         "it is not used internally, and will be removed soon",
         DeprecationWarning,
         stacklevel=2,
     )
+    
     operation_id = f"{name}{path}"
     operation_id = re.sub(r"\W", "_", operation_id)
     operation_id = f"{operation_id}_{method.lower()}"
+    
+    if log:
+        print(f"Generated operation ID: {operation_id}")
+        
     return operation_id
 
 
