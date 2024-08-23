@@ -6,7 +6,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import HTTPBase as HTTPBaseModel
 from fastapi.openapi.models import HTTPBearer as HTTPBearerModel
 from fastapi.security.base import SecurityBase
-from fastapi.security.utils import get_authorization_scheme_param
+from fastapi.security.utils import get_auth_scheme_param
 from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
@@ -83,7 +83,7 @@ class HTTPBase(SecurityBase):
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         authorization = request.headers.get("Authorization")
-        scheme, credentials = get_authorization_scheme_param(authorization)
+        scheme, credentials = get_auth_scheme_param(authorization)
         if not (authorization and scheme and credentials):
             if self.auto_error:
                 raise HTTPException(
@@ -188,7 +188,7 @@ class HTTPBasic(HTTPBase):
         self, request: Request
     ) -> Optional[HTTPBasicCredentials]:
         authorization = request.headers.get("Authorization")
-        scheme, param = get_authorization_scheme_param(authorization)
+        scheme, param = get_auth_scheme_param(authorization)
         if self.realm:
             unauthorized_headers = {"WWW-Authenticate": f'Basic realm="{self.realm}"'}
         else:
@@ -302,7 +302,7 @@ class HTTPBearer(HTTPBase):
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         authorization = request.headers.get("Authorization")
-        scheme, credentials = get_authorization_scheme_param(authorization)
+        scheme, credentials = get_auth_scheme_param(authorization)
         if not (authorization and scheme and credentials):
             if self.auto_error:
                 raise HTTPException(
@@ -404,7 +404,7 @@ class HTTPDigest(HTTPBase):
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         authorization = request.headers.get("Authorization")
-        scheme, credentials = get_authorization_scheme_param(authorization)
+        scheme, credentials = get_auth_scheme_param(authorization)
         if not (authorization and scheme and credentials):
             if self.auto_error:
                 raise HTTPException(

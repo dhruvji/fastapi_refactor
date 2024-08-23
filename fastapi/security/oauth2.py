@@ -5,7 +5,7 @@ from fastapi.openapi.models import OAuth2 as OAuth2Model
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.param_functions import Form
 from fastapi.security.base import SecurityBase
-from fastapi.security.utils import get_authorization_scheme_param
+from fastapi.security.utils import get_auth_scheme_param
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
@@ -472,7 +472,7 @@ class OAuth2PasswordBearer(OAuth2):
 
     async def __call__(self, request: Request) -> Optional[str]:
         authorization = request.headers.get("Authorization")
-        scheme, param = get_authorization_scheme_param(authorization)
+        scheme, param = get_auth_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
                 raise HTTPException(
@@ -582,7 +582,7 @@ class OAuth2AuthorizationCodeBearer(OAuth2):
 
     async def __call__(self, request: Request) -> Optional[str]:
         authorization = request.headers.get("Authorization")
-        scheme, param = get_authorization_scheme_param(authorization)
+        scheme, param = get_auth_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
                 raise HTTPException(
