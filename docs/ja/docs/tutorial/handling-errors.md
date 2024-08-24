@@ -266,7 +266,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 また、何らかの方法で例外を使用することもできますが、**FastAPI** から同じデフォルトの例外ハンドラを使用することもできます。
 
-デフォルトの例外ハンドラを`fastapi.exception_handlers`からインポートして再利用することができます:
+デフォルトの例外ハンドラを`fastapi.handlers`からインポートして再利用することができます:
 
 ```Python hl_lines="2 3 4 5 15 21"
 {!../../../docs_src/handling_errors/tutorial006.py!}

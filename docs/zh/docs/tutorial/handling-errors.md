@@ -281,7 +281,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 FastAPI 支持先对异常进行某些处理，然后再使用 **FastAPI** 中处理该异常的默认异常处理器。
 
-从 `fastapi.exception_handlers` 中导入要复用的默认异常处理器：
+从 `fastapi.handlers` 中导入要复用的默认异常处理器：
 
 ```Python hl_lines="2-5  15  21"
 {!../../../docs_src/handling_errors/tutorial006.py!}

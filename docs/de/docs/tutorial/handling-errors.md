@@ -262,7 +262,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 ### **FastAPI**s Exceptionhandler wiederverwenden
 
-Wenn Sie die Exception zusammen mit denselben Default-Exceptionhandlern von **FastAPI** verwenden möchten, können Sie die Default-Exceptionhandler von `fastapi.Exception_handlers` importieren und wiederverwenden:
+Wenn Sie die Exception zusammen mit denselben Default-Exceptionhandlern von **FastAPI** verwenden möchten, können Sie die Default-Exceptionhandler von `fastapi.handlers` importieren und wiederverwenden:
 
 ```Python hl_lines="2-5  15  21"
 {!../../../docs_src/handling_errors/tutorial006.py!}
