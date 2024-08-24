@@ -42,7 +42,7 @@ from fastapi._compat import (
     lenient_issubclass,
     sequence_types,
     serialize_sequence_value,
-    value_is_sequence,
+    value_is_a_sequence,
 )
 from fastapi.background import BackgroundTasks
 from fastapi.concurrency import (
@@ -738,7 +738,7 @@ async def request_body_to_args(
             elif (
                 is_bytes_sequence_field(field)
                 and isinstance(field_info, params.File)
-                and value_is_sequence(value)
+                and value_is_a_sequence(value)
             ):
                 # For types
                 assert isinstance(value, sequence_types)  # type: ignore[arg-type]
