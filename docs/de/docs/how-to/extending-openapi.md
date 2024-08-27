@@ -16,7 +16,7 @@ Diese gibt lediglich eine JSON-Response zurück, mit dem Ergebnis der Methode `.
 
 Standardmäßig überprüft die Methode `.openapi()` die Eigenschaft `.openapi_schema`, um zu sehen, ob diese Inhalt hat, und gibt diesen zurück.
 
-Ist das nicht der Fall, wird der Inhalt mithilfe der Hilfsfunktion unter `fastapi.openapi.utils.get_openapi` generiert.
+Ist das nicht der Fall, wird der Inhalt mithilfe der Hilfsfunktion unter `fastapi.openapi.get_utils.get_openapi` generiert.
 
 Und diese Funktion `get_openapi()` erhält als Parameter:
 

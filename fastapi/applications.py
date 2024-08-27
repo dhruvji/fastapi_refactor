@@ -27,7 +27,7 @@ from fastapi.openapi.docs import (
     get_swagger_ui_html,
     get_swagger_ui_oauth2_redirect_html,
 )
-from fastapi.openapi.utils import get_openapi
+from fastapi.openapi.get_utils import get_openapi
 from fastapi.params import Depends
 from fastapi.types import DecoratedCallable, IncEx
 from fastapi.utils import generate_unique_id

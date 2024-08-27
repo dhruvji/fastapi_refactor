@@ -26,7 +26,7 @@
 
 🔢, ⚫️❔ 👩‍🔬 `.openapi()` 🔨 ✅ 🏠 `.openapi_schema` 👀 🚥 ⚫️ ✔️ 🎚 &amp; 📨 👫.
 
-🚥 ⚫️ 🚫, ⚫️ 🏗 👫 ⚙️ 🚙 🔢 `fastapi.openapi.utils.get_openapi`.
+🚥 ⚫️ 🚫, ⚫️ 🏗 👫 ⚙️ 🚙 🔢 `fastapi.openapi.get_utils.get_openapi`.
 
 &amp; 👈 🔢 `get_openapi()` 📨 🔢:
 

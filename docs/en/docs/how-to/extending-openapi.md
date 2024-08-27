@@ -16,7 +16,7 @@ It just returns a JSON response with the result of the application's `.openapi()
 
 By default, what the method `.openapi()` does is check the property `.openapi_schema` to see if it has contents and return them.
 
-If it doesn't, it generates them using the utility function at `fastapi.openapi.utils.get_openapi`.
+If it doesn't, it generates them using the utility function at `fastapi.openapi.get_utils.get_openapi`.
 
 And that function `get_openapi()` receives as parameters:
 

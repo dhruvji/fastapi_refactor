@@ -18,7 +18,7 @@ openapi_schema = {
             "get": {
                 "responses": {
                     # this is how one would imagine the openapi schema to be
-                    # but since the key is not valid, openapi.utils.get_openapi will raise ValueError
+                    # but since the key is not valid, openapi.get_utils.get_openapi will raise ValueError
                     "hello": {"description": "Not a valid additional response"},
                     "200": {
                         "description": "Successful Response",
