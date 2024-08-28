@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict, List, Optional, Sequence, Union
 
-from fastapi import params
+from fastapi import param
 from fastapi._compat import Undefined
 from fastapi.openapi.models import Example
 from typing_extensions import Annotated, Doc, deprecated
@@ -303,7 +303,7 @@ def Path(  # noqa: N802
         return {"item_id": item_id}
     ```
     """
-    return params.Path(
+    return param.Path(
         default=default,
         default_factory=default_factory,
         alias=alias,
@@ -607,7 +607,7 @@ def Query(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.Query(
+    return param.Query(
         default=default,
         default_factory=default_factory,
         alias=alias,
@@ -922,7 +922,7 @@ def Header(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.Header(
+    return param.Header(
         default=default,
         default_factory=default_factory,
         alias=alias,
@@ -1227,7 +1227,7 @@ def Cookie(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.Cookie(
+    return param.Cookie(
         default=default,
         default_factory=default_factory,
         alias=alias,
@@ -1554,7 +1554,7 @@ def Body(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.Body(
+    return param.Body(
         default=default,
         default_factory=default_factory,
         embed=embed,
@@ -1869,7 +1869,7 @@ def Form(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.Form(
+    return param.Form(
         default=default,
         default_factory=default_factory,
         media_type=media_type,
@@ -2183,7 +2183,7 @@ def File(  # noqa: N802
         ),
     ],
 ) -> Any:
-    return params.File(
+    return param.File(
         default=default,
         default_factory=default_factory,
         media_type=media_type,
@@ -2274,7 +2274,7 @@ def Depends(  # noqa: N802
         return commons
     ```
     """
-    return params.Depends(dependency=dependency, use_cache=use_cache)
+    return param.Depends(dependency=dependency, use_cache=use_cache)
 
 
 def Security(  # noqa: N802
@@ -2357,4 +2357,4 @@ def Security(  # noqa: N802
         return [{"item_id": "Foo", "owner": current_user.username}]
     ```
     """
-    return params.Security(dependency=dependency, scopes=scopes, use_cache=use_cache)
+    return param.Security(dependency=dependency, scopes=scopes, use_cache=use_cache)

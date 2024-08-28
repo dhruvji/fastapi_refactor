@@ -232,11 +232,11 @@ if PYDANTIC_V2:
         return field_mapping, definitions  # type: ignore[return-value]
 
     def is_scalar_field(field: ModelField) -> bool:
-        from fastapi import params
+        from fastapi import param
 
         return field_annotation_is_scalar(
             field.field_info.annotation
-        ) and not isinstance(field.field_info, params.Body)
+        ) and not isinstance(field.field_info, param.Body)
 
     def is_sequence_field(field: ModelField) -> bool:
         return field_annotation_is_sequence(field.field_info.annotation)
@@ -385,7 +385,7 @@ else:
         return definitions
 
     def is_pv1_scalar_field(field: ModelField) -> bool:
-        from fastapi import params
+        from fastapi import param
 
         field_info = field.field_info
         if not (
@@ -394,7 +394,7 @@ else:
             and not lenient_issubclass(field.type_, dict)
             and not field_annotation_is_sequence(field.type_)
             and not is_dataclass(field.type_)
-            and not isinstance(field_info, params.Body)
+            and not isinstance(field_info, param.Body)
         ):
             return False
         if field.sub_fields:  # type: ignore[attr-defined]

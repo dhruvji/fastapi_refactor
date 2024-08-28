@@ -20,7 +20,7 @@ from fastapi.dependencies.utils import get_flat_dependant, get_flat_params
 from fastapi.encoders import jsonable_encoder
 from fastapi.openapi.constants import METHODS_WITH_BODY, REF_PREFIX, REF_TEMPLATE
 from fastapi.openapi.models import OpenAPI
-from fastapi.params import Body, Param
+from fastapi.param import Body, Param
 from fastapi.responses import Response
 from fastapi.types import ModelNameMap
 from fastapi.utils import (

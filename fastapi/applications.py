@@ -28,7 +28,7 @@ from fastapi.openapi.docs import (
     get_swagger_ui_oauth2_redirect_html,
 )
 from fastapi.openapi.utils import get_openapi
-from fastapi.params import Depends
+from fastapi.param import Depends
 from fastapi.types import DecoratedCallable, IncEx
 from fastapi.utils import generate_unique_id
 from starlette.applications import Starlette

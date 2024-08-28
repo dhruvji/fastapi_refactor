@@ -18,7 +18,7 @@ from typing import (
 )
 
 import anyio
-from fastapi import params
+from fastapi import param
 from fastapi._compat import (
     PYDANTIC_V2,
     ErrorWrapper,
@@ -81,7 +81,7 @@ multipart_incorrect_install_error = (
 
 def check_file_field(field: ModelField) -> None:
     field_info = field.field_info
-    if isinstance(field_info, params.Form):
+    if isinstance(field_info, param.Form):
         try:
             # __version__ is available in both multiparts, and can be mocked
             from multipart import __version__  # type: ignore
@@ -103,7 +103,7 @@ def check_file_field(field: ModelField) -> None:
 def get_param_sub_dependant(
     *,
     param_name: str,
-    depends: params.Depends,
+    depends: param.Depends,
     path: str,
     security_scopes: Optional[List[str]] = None,
 ) -> Dependant:
@@ -117,7 +117,7 @@ def get_param_sub_dependant(
     )
 
 
-def get_parameterless_sub_dependant(*, depends: params.Depends, path: str) -> Dependant:
+def get_parameterless_sub_dependant(*, depends: param.Depends, path: str) -> Dependant:
     assert callable(
         depends.dependency
     ), "A parameter-less dependency must have a callable dependency"
@@ -126,7 +126,7 @@ def get_parameterless_sub_dependant(*, depends: params.Depends, path: str) -> De
 
 def get_sub_dependant(
     *,
-    depends: params.Depends,
+    depends: param.Depends,
     dependency: Callable[..., Any],
     path: str,
     name: Optional[str] = None,
@@ -134,7 +134,7 @@ def get_sub_dependant(
 ) -> Dependant:
     security_requirement = None
     security_scopes = security_scopes or []
-    if isinstance(depends, params.Security):
+    if isinstance(depends, param.Security):
         dependency_scopes = depends.scopes
         security_scopes.extend(dependency_scopes)
     if isinstance(dependency, SecurityBase):
@@ -170,11 +170,11 @@ def get_flat_dependant(
     visited.append(dependant.cache_key)
 
     flat_dependant = Dependant(
-        path_params=dependant.path_params.copy(),
-        query_params=dependant.query_params.copy(),
-        header_params=dependant.header_params.copy(),
-        cookie_params=dependant.cookie_params.copy(),
-        body_params=dependant.body_params.copy(),
+        path_params=dependant.path_param.copy(),
+        query_params=dependant.query_param.copy(),
+        header_params=dependant.header_param.copy(),
+        cookie_params=dependant.cookie_param.copy(),
+        body_params=dependant.body_param.copy(),
         security_schemes=dependant.security_requirements.copy(),
         use_cache=dependant.use_cache,
         path=dependant.path,
@@ -185,11 +185,11 @@ def get_flat_dependant(
         flat_sub = get_flat_dependant(
             sub_dependant, skip_repeats=skip_repeats, visited=visited
         )
-        flat_dependant.path_params.extend(flat_sub.path_params)
-        flat_dependant.query_params.extend(flat_sub.query_params)
-        flat_dependant.header_params.extend(flat_sub.header_params)
-        flat_dependant.cookie_params.extend(flat_sub.cookie_params)
-        flat_dependant.body_params.extend(flat_sub.body_params)
+        flat_dependant.path_param.extend(flat_sub.path_params)
+        flat_dependant.query_param.extend(flat_sub.query_params)
+        flat_dependant.header_param.extend(flat_sub.header_params)
+        flat_dependant.cookie_param.extend(flat_sub.cookie_params)
+        flat_dependant.body_param.extend(flat_sub.body_params)
         flat_dependant.security_requirements.extend(flat_sub.security_requirements)
     return flat_dependant
 
@@ -256,7 +256,7 @@ def get_dependant(
         security_scopes=security_scopes,
         use_cache=use_cache,
     )
-    for param_name, param in signature_params.items():
+    for param_name, param in signature_param.items():
         is_path_param = param_name in path_param_names
         type_annotation, depends, param_field = analyze_param(
             param_name=param_name,
@@ -284,7 +284,7 @@ def get_dependant(
             continue
         assert param_field is not None
         if is_body_param(param_field=param_field, is_path_param=is_path_param):
-            dependant.body_params.append(param_field)
+            dependant.body_param.append(param_field)
         else:
             add_param_to_fields(field=param_field, dependant=dependant)
     return dependant
@@ -320,7 +320,7 @@ def analyze_param(
     annotation: Any,
     value: Any,
     is_path_param: bool,
-) -> Tuple[Any, Optional[params.Depends], Optional[ModelField]]:
+) -> Tuple[Any, Optional[param.Depends], Optional[ModelField]]:
     field_info = None
     depends = None
     type_annotation: Any = Any
@@ -334,15 +334,15 @@ def analyze_param(
         fastapi_annotations = [
             arg
             for arg in annotated_args[1:]
-            if isinstance(arg, (FieldInfo, params.Depends))
+            if isinstance(arg, (FieldInfo, param.Depends))
         ]
         fastapi_specific_annotations = [
             arg
             for arg in fastapi_annotations
-            if isinstance(arg, (params.Param, params.Body, params.Depends))
+            if isinstance(arg, (param.Param, param.Body, param.Depends))
         ]
         if fastapi_specific_annotations:
-            fastapi_annotation: Union[FieldInfo, params.Depends, None] = (
+            fastapi_annotation: Union[FieldInfo, param.Depends, None] = (
                 fastapi_specific_annotations[-1]
             )
         else:
@@ -361,10 +361,10 @@ def analyze_param(
                 field_info.default = value
             else:
                 field_info.default = Required
-        elif isinstance(fastapi_annotation, params.Depends):
+        elif isinstance(fastapi_annotation, param.Depends):
             depends = fastapi_annotation
 
-    if isinstance(value, params.Depends):
+    if isinstance(value, param.Depends):
         assert depends is None, (
             "Cannot specify `Depends` in `Annotated` and default value"
             f" together for {param_name!r}"
@@ -409,28 +409,28 @@ def analyze_param(
             # We might check here that `default_value is Required`, but the fact is that the same
             # parameter might sometimes be a path parameter and sometimes not. See
             # `tests/test_infer_param_optionality.py` for an example.
-            field_info = params.Path(annotation=use_annotation)
+            field_info = param.Path(annotation=use_annotation)
         elif is_uploadfile_or_nonable_uploadfile_annotation(
             type_annotation
         ) or is_uploadfile_sequence_annotation(type_annotation):
-            field_info = params.File(annotation=use_annotation, default=default_value)
+            field_info = param.File(annotation=use_annotation, default=default_value)
         elif not field_annotation_is_scalar(annotation=type_annotation):
-            field_info = params.Body(annotation=use_annotation, default=default_value)
+            field_info = param.Body(annotation=use_annotation, default=default_value)
         else:
-            field_info = params.Query(annotation=use_annotation, default=default_value)
+            field_info = param.Query(annotation=use_annotation, default=default_value)
 
     field = None
     if field_info is not None:
         if is_path_param:
-            assert isinstance(field_info, params.Path), (
+            assert isinstance(field_info, param.Path), (
                 f"Cannot use `{field_info.__class__.__name__}` for path param"
                 f" {param_name!r}"
             )
         elif (
-            isinstance(field_info, params.Param)
+            isinstance(field_info, param.Param)
             and getattr(field_info, "in_", None) is None
         ):
-            field_info.in_ = params.ParamTypes.query
+            field_info.in_ = param.ParamTypes.query
         use_annotation_from_field_info = get_annotation_from_field_info(
             use_annotation,
             field_info,
@@ -462,12 +462,12 @@ def is_body_param(*, param_field: ModelField, is_path_param: bool) -> bool:
     elif is_scalar_field(field=param_field):
         return False
     elif isinstance(
-        param_field.field_info, (params.Query, params.Header)
+        param_field.field_info, (param.Query, param.Header)
     ) and is_scalar_sequence_field(param_field):
         return False
     else:
         assert isinstance(
-            param_field.field_info, params.Body
+            param_field.field_info, param.Body
         ), f"Param: {param_field.name} can only be a request body, using Body()"
         return True
 
@@ -475,17 +475,17 @@ def is_body_param(*, param_field: ModelField, is_path_param: bool) -> bool:
 def add_param_to_fields(*, field: ModelField, dependant: Dependant) -> None:
     field_info = field.field_info
     field_info_in = getattr(field_info, "in_", None)
-    if field_info_in == params.ParamTypes.path:
-        dependant.path_params.append(field)
-    elif field_info_in == params.ParamTypes.query:
-        dependant.query_params.append(field)
-    elif field_info_in == params.ParamTypes.header:
-        dependant.header_params.append(field)
+    if field_info_in == param.ParamTypes.path:
+        dependant.path_param.append(field)
+    elif field_info_in == param.ParamTypes.query:
+        dependant.query_param.append(field)
+    elif field_info_in == param.ParamTypes.header:
+        dependant.header_param.append(field)
     else:
         assert (
-            field_info_in == params.ParamTypes.cookie
+            field_info_in == param.ParamTypes.cookie
         ), f"non-body parameters must be in path, query, header or cookie: {field.name}"
-        dependant.cookie_params.append(field)
+        dependant.cookie_param.append(field)
 
 
 def is_coroutine_callable(call: Callable[..., Any]) -> bool:
@@ -659,12 +659,12 @@ def request_params_to_args(
         if is_scalar_sequence_field(field) and isinstance(
             received_params, (QueryParams, Headers)
         ):
-            value = received_params.getlist(field.alias) or field.default
+            value = received_param.getlist(field.alias) or field.default
         else:
-            value = received_params.get(field.alias)
+            value = received_param.get(field.alias)
         field_info = field.field_info
         assert isinstance(
-            field_info, params.Param
+            field_info, param.Param
         ), "Params must be subclasses of Param"
         loc = (field_info.in_.value, field.alias)
         if value is None:
@@ -717,9 +717,9 @@ async def request_body_to_args(
                         continue
             if (
                 value is None
-                or (isinstance(field_info, params.Form) and value == "")
+                or (isinstance(field_info, param.Form) and value == "")
                 or (
-                    isinstance(field_info, params.Form)
+                    isinstance(field_info, param.Form)
                     and is_sequence_field(field)
                     and len(value) == 0
                 )
@@ -730,14 +730,14 @@ async def request_body_to_args(
                     values[field.name] = deepcopy(field.default)
                 continue
             if (
-                isinstance(field_info, params.File)
+                isinstance(field_info, param.File)
                 and is_bytes_field(field)
                 and isinstance(value, UploadFile)
             ):
                 value = await value.read()
             elif (
                 is_bytes_sequence_field(field)
-                and isinstance(field_info, params.File)
+                and isinstance(field_info, param.File)
                 and value_is_sequence(value)
             ):
                 # For types
@@ -793,17 +793,17 @@ def get_body_field(*, dependant: Dependant, name: str) -> Optional[ModelField]:
     }
     if not required:
         BodyFieldInfo_kwargs["default"] = None
-    if any(isinstance(f.field_info, params.File) for f in flat_dependant.body_params):
-        BodyFieldInfo: Type[params.Body] = params.File
-    elif any(isinstance(f.field_info, params.Form) for f in flat_dependant.body_params):
-        BodyFieldInfo = params.Form
+    if any(isinstance(f.field_info, param.File) for f in flat_dependant.body_params):
+        BodyFieldInfo: Type[param.Body] = param.File
+    elif any(isinstance(f.field_info, param.Form) for f in flat_dependant.body_params):
+        BodyFieldInfo = param.Form
     else:
-        BodyFieldInfo = params.Body
+        BodyFieldInfo = param.Body
 
         body_param_media_types = [
             f.field_info.media_type
             for f in flat_dependant.body_params
-            if isinstance(f.field_info, params.Body)
+            if isinstance(f.field_info, param.Body)
         ]
         if len(set(body_param_media_types)) == 1:
             BodyFieldInfo_kwargs["media_type"] = body_param_media_types[0]

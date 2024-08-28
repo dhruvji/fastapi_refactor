@@ -19,7 +19,7 @@ from typing import (
     Union,
 )
 
-from fastapi import params
+from fastapi import param
 from fastapi._compat import (
     ModelField,
     Undefined,
@@ -209,7 +209,7 @@ def get_request_handler(
 ) -> Callable[[Request], Coroutine[Any, Any, Response]]:
     assert dependant.call is not None, "dependant.call must be a function"
     is_coroutine = asyncio.iscoroutinefunction(dependant.call)
-    is_body_form = body_field and isinstance(body_field.field_info, params.Form)
+    is_body_form = body_field and isinstance(body_field.field_info, param.Form)
     if isinstance(response_class, DefaultPlaceholder):
         actual_response_class: Type[Response] = response_class.value
     else:
@@ -357,7 +357,7 @@ class APIWebSocketRoute(routing.WebSocketRoute):
         endpoint: Callable[..., Any],
         *,
         name: Optional[str] = None,
-        dependencies: Optional[Sequence[params.Depends]] = None,
+        dependencies: Optional[Sequence[param.Depends]] = None,
         dependency_overrides_provider: Optional[Any] = None,
     ) -> None:
         self.path = path
@@ -395,7 +395,7 @@ class APIRoute(routing.Route):
         response_model: Any = Default(None),
         status_code: Optional[int] = None,
         tags: Optional[List[Union[str, Enum]]] = None,
-        dependencies: Optional[Sequence[params.Depends]] = None,
+        dependencies: Optional[Sequence[param.Depends]] = None,
         summary: Optional[str] = None,
         description: Optional[str] = None,
         response_description: str = "Successful Response",
@@ -588,7 +588,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to all the
@@ -836,7 +836,7 @@ class APIRouter(routing.Router):
         response_model: Any = Default(None),
         status_code: Optional[int] = None,
         tags: Optional[List[Union[str, Enum]]] = None,
-        dependencies: Optional[Sequence[params.Depends]] = None,
+        dependencies: Optional[Sequence[param.Depends]] = None,
         summary: Optional[str] = None,
         description: Optional[str] = None,
         response_description: str = "Successful Response",
@@ -917,7 +917,7 @@ class APIRouter(routing.Router):
         response_model: Any = Default(None),
         status_code: Optional[int] = None,
         tags: Optional[List[Union[str, Enum]]] = None,
-        dependencies: Optional[Sequence[params.Depends]] = None,
+        dependencies: Optional[Sequence[param.Depends]] = None,
         summary: Optional[str] = None,
         description: Optional[str] = None,
         response_description: str = "Successful Response",
@@ -978,7 +978,7 @@ class APIRouter(routing.Router):
         endpoint: Callable[..., Any],
         name: Optional[str] = None,
         *,
-        dependencies: Optional[Sequence[params.Depends]] = None,
+        dependencies: Optional[Sequence[param.Depends]] = None,
     ) -> None:
         current_dependencies = self.dependencies.copy()
         if dependencies:
@@ -1013,7 +1013,7 @@ class APIRouter(routing.Router):
         ] = None,
         *,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be used for this
@@ -1089,7 +1089,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to all the
@@ -1233,7 +1233,7 @@ class APIRouter(routing.Router):
                     current_tags.extend(tags)
                 if route.tags:
                     current_tags.extend(route.tags)
-                current_dependencies: List[params.Depends] = []
+                current_dependencies: List[param.Depends] = []
                 if dependencies:
                     current_dependencies.extend(dependencies)
                 if route.dependencies:
@@ -1383,7 +1383,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -1760,7 +1760,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -2142,7 +2142,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -2524,7 +2524,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -2901,7 +2901,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -3278,7 +3278,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -3660,7 +3660,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
@@ -4042,7 +4042,7 @@ class APIRouter(routing.Router):
             ),
         ] = None,
         dependencies: Annotated[
-            Optional[Sequence[params.Depends]],
+            Optional[Sequence[param.Depends]],
             Doc(
                 """
                 A list of dependencies (using `Depends()`) to be applied to the
